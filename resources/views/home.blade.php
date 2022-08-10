@@ -15,6 +15,8 @@
                     @endif
 
                    <div class="row">
+                    <div id="notification" class="alert alert-success col-md-12" style="display: none" role="alert">
+                    </div>
                           <div class="col-md-6">
                             <div class="card">
                                  <div class="card-header">
@@ -46,7 +48,7 @@
                                             </label>
                                             <select name="account_id" id="account_id" class="form-control">
                                                 <option value="">
-                                                    Selecione
+                                                    Selecione uma conta
                                                 </option>
                                                 @foreach($accounts as $account)
                                                     <option value="{{ $account->id }}">
@@ -59,10 +61,10 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text">R$</span>
                                             </div>
-                                            <input type="text" name="value" id="value" placeholder="Valor" class="form-control">
+                                            <input type="text" name="value" id="value" placeholder="Valor" class="form-control" onkeyup=" transactionOn(this.value);">
                                         </div>
                                         <div class="form-group">
-                                            <button onclick="transaction();" class="btn btn-success">
+                                            <button onclick="transaction();" class="btn btn-success tranferir">
                                                 <i class="fa fa-send"></i>
                                                 Transferir
                                             </button>
@@ -118,9 +120,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
     <script>
-        var value = $('#value');
+        let value = $('#value');
         $(document).ready(function(){
             value.mask('000.000.000.000.000,00', {reverse: true});
+            transactionOn();
         });
     </script>
     <script>
@@ -135,9 +138,53 @@
                 player: player_id
             }, function(data){
                 console.log(data);
+                if(data.success){
+                    $('#notification').show();
+                    $('#notification').html(data.message);
+                    setTimeout(function(){
+                        $('#notification').hide();
+                    }, 3000);
+                    $('#value').val('');
+                    $('#account_id').val('');
+                }
             });
-
-
         }
     </script>
+    <script>
+        function transactionOn(value='0') {
+            let btntransferir = $('.tranferir');
+            //validação para saldo negativo
+            let balance = {{ Auth::user()->getBalance() }};
+            let vl =parseFloat(value.replace('.', '').replace(',', '.'));
+            console.log($('#account_id').val());
+            if(vl > balance ){
+                btntransferir.prop('disabled', true);
+                notification('warning', 'Saldo insuficiente');
+
+            }
+            else if(!$('#account_id').val()){
+                notification('warning', 'Selecione uma conta');
+            }
+            else if(value == 0){
+                btntransferir.prop('disabled', true);
+            }
+            else{
+                btntransferir.prop('disabled', false);
+            }
+        }
+
+        function notification(type, message){
+            let notification = $('#notification');
+            notification.removeClass('alert-success');
+            notification.removeClass('alert-danger');
+            notification.addClass('alert-'+type);
+            notification.html(message);
+            notification.show();
+            setTimeout(function(){
+                notification.hide();
+
+            }, 3000);
+        }
+    </script>
+
 @endsection
