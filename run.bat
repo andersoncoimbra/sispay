@@ -1,1 +1,1 @@
-docker-compose start
+docker compose -f "docker-compose.yml"  -p "sispay" start
