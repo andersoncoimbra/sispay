@@ -25,7 +25,7 @@
                                  </div>
                                  <div class="card-body">
                                     <strong>
-                                        R$ 2000,00
+                                       {{ Auth::user()->getBalance() }}
                                       </strong>
                                  </div>
                             </div>
@@ -37,8 +37,7 @@
                                      </h5>
                                 </div>
                                 <div class="card-body">
-                                    <form action="" method="post">
-                                        @csrf
+
                                         <div class="form-group">
                                             <label for="">
                                                 <strong>
@@ -49,7 +48,11 @@
                                                 <option value="">
                                                     Selecione
                                                 </option>
-
+                                                @foreach($accounts as $account)
+                                                    <option value="{{ $account->id }}">
+                                                        {{ $account->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="input-group mb-3">
@@ -59,12 +62,11 @@
                                             <input type="text" name="value" id="value" placeholder="Valor" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-success">
+                                            <button onclick="transaction();" class="btn btn-success">
                                                 <i class="fa fa-send"></i>
                                                 Transferir
                                             </button>
                                         </div>
-                                    </form>
                                 </div>
                            </div>
                           </div>
@@ -86,16 +88,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>01/01/2019</td>
-                                                <td>Compra de produto</td>
-                                                <td>R$ 100,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>01/01/2019</td>
-                                                <td>Compra de produto</td>
-                                                <td>R$ 100,00</td>
-                                            </tr>
+                                            @foreach($transactions as $transaction)
+                                                <tr>
+                                                    <td>
+                                                        {{ $transaction->dataBr() }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $transaction->description }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $transaction->value }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                       </table>
                                  </div>
@@ -117,5 +122,22 @@
         $(document).ready(function(){
             value.mask('000.000.000.000.000,00', {reverse: true});
         });
+    </script>
+    <script>
+        function transaction(){
+            let account_id = $('#account_id').val();
+            let value = $('#value').val();
+            let player_id = {{ Auth::user()->id }};
+
+            $.post('{{ route('transaction.store') }}', {
+                payee: account_id,
+                value: value,
+                player: player_id
+            }, function(data){
+                console.log(data);
+            });
+
+
+        }
     </script>
 @endsection

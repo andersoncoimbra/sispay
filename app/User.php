@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Transaction;
 
 class User extends Authenticatable
 {
@@ -36,4 +37,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function getBalance()
+    {
+        $balance = 0;
+        foreach ($this->transactions as $transaction) {
+            $balance += $transaction->value;
+        }
+        return $balance;
+    }
 }
