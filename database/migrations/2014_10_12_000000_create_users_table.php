@@ -17,11 +17,15 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->addColumn('integer', 'cpf_cnpj', ['length' => 14, 'unsigned' => true, 'nullable' => false, 'zerofill' => true, 'unique' => true]);
+            $table->enum('tipo', ['comum', 'lojista'])->default('comum');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE `sispay`.`users` CHANGE COLUMN `cpf_cnpj` `cpf_cnpj` BIGINT(14) UNSIGNED ZEROFILL NOT NULL');
     }
 
     /**
