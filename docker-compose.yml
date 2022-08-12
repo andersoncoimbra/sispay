@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   app:
+    container_name: sispay_app
     build:
       context: .
       dockerfile: .docker/Dockerfile

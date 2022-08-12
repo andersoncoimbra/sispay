@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->addColumn('integer', 'cpf_cnpj', ['length' => 14, 'unsigned' => true, 'nullable' => false, 'zerofill' => true, 'unique' => true]);
-            $table->enum('tipo', ['comum', 'lojista'])->default('comum');
+            $table->enum('tipo', ['admin','comum', 'lojista'])->default('comum');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

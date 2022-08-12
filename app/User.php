@@ -51,4 +51,10 @@ class User extends Authenticatable
         }
         return $balance;
     }
+
+    //acconts active
+    public  function contasAtivas()
+    {
+        return User::whereIn('tipo', ['comum', 'lojista'])->where('id', '<>',$this->id)->get();
+    }
 }
