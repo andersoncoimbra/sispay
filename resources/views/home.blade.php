@@ -26,9 +26,9 @@
                                       </h5>
                                  </div>
                                  <div class="card-body">
-                                    <strong>
-                                       {{ Auth::user()->getBalance() }}
-                                      </strong>
+                                    <h2>
+                                       R$ {{ Auth::user()->getBalance() }}
+                                      </h2>
                                  </div>
                             </div>
                             <div class="card">

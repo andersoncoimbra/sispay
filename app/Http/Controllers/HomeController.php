@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $accounts = User::where('id', '<>',$user->id)->get();
+        $accounts = $user->contasAtivas();
         $transactions = $user->transactions()->orderBy('id', 'desc')->get();
 
         return view('home', compact('accounts', 'transactions'));
