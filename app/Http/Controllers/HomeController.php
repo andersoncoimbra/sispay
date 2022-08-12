@@ -26,7 +26,7 @@ class HomeController extends Controller
     {
         $user = auth()->user();
         $accounts = User::where('id', '<>',$user->id)->get();
-        $transactions = $user->transactions;
+        $transactions = $user->transactions()->orderBy('id', 'desc')->get();
 
         return view('home', compact('accounts', 'transactions'));
     }

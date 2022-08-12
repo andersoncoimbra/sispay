@@ -91,7 +91,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($transactions as $transaction)
-                                                <tr>
+                                                <tr style="color: {{ $transaction->value >= 0? 'green':'red' }}">
                                                     <td>
                                                         {{ $transaction->dataBr() }}
                                                     </td>
@@ -137,16 +137,27 @@
                 value: value,
                 player: player_id
             }, function(data){
-                console.log(data);
-                if(data.success){
                     $('#notification').show();
                     $('#notification').html(data.message);
                     setTimeout(function(){
                         $('#notification').hide();
+                        //update page
+                        window.location.reload();
                     }, 3000);
                     $('#value').val('');
                     $('#account_id').val('');
-                }
+
+            }).fail(function(data) {
+                $('#notification').removeClass("alert-success");
+                $('#notification').addClass("alert-danger");
+                $('#notification').show();
+                    $('#notification').html(data.responseJSON.message);
+                    setTimeout(function(){
+                        $('#notification').hide();
+
+                    }, 3000);
+                    $('#value').val('');
+                    $('#account_id').val('');
             });
         }
     </script>
@@ -162,7 +173,7 @@
                 notification('warning', 'Saldo insuficiente');
 
             }
-            else if(!$('#account_id').val()){
+            else if(!$('#account_id').val() && value != 0){
                 notification('warning', 'Selecione uma conta');
             }
             else if(value == 0){

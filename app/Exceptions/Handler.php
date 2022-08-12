@@ -46,6 +46,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AccessDeniedHttpException) {
+            return response()->json([
+             'message' => 'Esta ação não é autorizada'
+            ],403);
+        }
+
         return parent::render($request, $exception);
     }
 }

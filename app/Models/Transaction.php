@@ -23,7 +23,7 @@ class Transaction extends Model
     //created_at fomat d/m/Y
     public function dataBr()
     {
-        return $this->created_at->format('d/m/Y');
+        return $this->created_at?$this->created_at->format('d/m/Y'):'';
     }
 
 

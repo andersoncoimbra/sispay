@@ -25,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('tranferencia', function ($user) {
+            return $user->tipo == 'comum';
+        });
     }
 }
