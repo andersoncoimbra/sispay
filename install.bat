@@ -5,4 +5,4 @@ docker exec -it sispay_app php artisan migrate
 docker exec -it sispay_app php artisan db:seed
 docker compose -f "docker-compose.yml"  -p "sispay" stop
 echo "Arquivo startup.bat sera removido!"
-Del startup.bat
+Del install.bat

@@ -5,4 +5,4 @@ winpty docker exec sispay_app php artisan migrate
 winpty docker exec sispay_app php artisan db:seed
 docker compose -f "docker-compose.yml"  -p "sispay" stop
 echo "Arquivo startup.sh sera removido!"
-rm startup.sh
+rm install.sh
